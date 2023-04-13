@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Table,
@@ -16,46 +16,42 @@ import {
 } from "@mui/material";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-import './index.css'
+import "./index.css";
+import { storeCart } from "../../redux/actions/ProductAction";
 
 export default function BasicTable() {
   const { cart } = useSelector((state) => state.allProducts);
   const [productsInCart, setProducts] = useState(cart);
   const [open, setOpen] = useState(false);
+  const [seletedpro,setSelectedPro] = useState();
+  const dispatch = useDispatch();
 
-  const onQuantityChange = (productId, count) => {
-    setProducts((oldState) => {
-      const productsIndex = oldState.findIndex((item) => item.id === productId);
-      if (productsIndex !== -1) {
-        oldState[productsIndex].count = count;
-      }
-      return [...oldState];
-    });
+  const onQuantityChange = (i, count) => {
+    productsInCart[i].count = count
+  setProducts([...productsInCart]);
+    
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
+    setSelectedPro(id)
     setOpen(true);
   };
 
-  const onProductRemove = (product) => {
-    setProducts((oldState) => {
-      const productsIndex = oldState.findIndex(
-        (item) => item.id === product.id
-      );
-      if (productsIndex !== -1) {
-        oldState.splice(productsIndex, 1);
-      }
-      return [...oldState];
-    });
-  };
-
-  const handledeletetrue = (product) => {
+  const handledeletetrue = () => {
+    const test = productsInCart.filter((rec)=> rec.id !== seletedpro)
+    setProducts([...test]);
     setOpen(false);
-    onProductRemove(product);
+    dispatch(storeCart(test))
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handledelteall = () => {
+    productsInCart.length = 0;
+    return cart;
+    
   };
 
   return (
@@ -63,20 +59,36 @@ export default function BasicTable() {
       {productsInCart?.length === 0 ? (
         <span className="empty-text">Your basket is currently empty</span>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650, mt: 10 }} aria-label="simple table">
+        <TableContainer component={Paper} enableStickyHeader>
+          <Table
+            sx={{ minWidth: 650, mt: 10 }}
+            stickyHeader
+            aria-label="sticky table"
+          >
             <TableHead>
               <TableRow>
-                <TableCell>Image</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell align="left">Description</TableCell>
-                <TableCell align="left">Price&nbsp;</TableCell>
-                <TableCell align="left">Qty&nbsp;</TableCell>
-                <TableCell align="left">Actions&nbsp;</TableCell>
+                <TableCell>
+                  <h3>Image</h3>
+                </TableCell>
+                <TableCell>
+                  <h3>Name</h3>
+                </TableCell>
+                <TableCell align="left">
+                  <h3>Description</h3>
+                </TableCell>
+                <TableCell align="left">
+                  <h3>Price&nbsp;</h3>
+                </TableCell>
+                <TableCell align="left">
+                  <h3>Qty&nbsp;</h3>
+                </TableCell>
+                <TableCell align="left">
+                  <h3>Actions&nbsp;</h3>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {productsInCart?.map((product) => (
+              {productsInCart?.map((product,i) => (
                 <TableRow
                   key={product.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -101,13 +113,13 @@ export default function BasicTable() {
                       className="count"
                       value={product.count}
                       onChange={(event) => {
-                        onQuantityChange(product.id, event.target.value);
+                        onQuantityChange(i, event.target.value);
                       }}
                     >
                       {[...Array(10).keys()]?.map((number) => {
                         const num = number + 1;
                         return (
-                          <option value={num} key={num} defaultValue="1">
+                          <option  value={num} key={num} defaultValue="1">
                             {num}
                           </option>
                         );
@@ -115,13 +127,12 @@ export default function BasicTable() {
                     </select>
                   </TableCell>
                   <TableCell align="left">
-                    {" "}
-                    <Button
+                    <button
                       className="btn remove-btn"
-                      onClick={handleClickOpen}
+                      onClick={() => handleClickOpen(product.id)}
                     >
                       <RiDeleteBin6Line size={20} />
-                    </Button>
+                    </button>
                     <Dialog
                       open={open}
                       onClose={handleClose}
@@ -132,11 +143,9 @@ export default function BasicTable() {
                         {"Are you sure you want to delete this product?"}
                       </DialogTitle>
                       <DialogActions>
-                        <Button onClick={handleClose} >
-                          Disagree
-                        </Button>
+                        <Button onClick={handleClose}>Disagree</Button>
                         <Button
-                          onClick={() => handledeletetrue(product)}
+                          onClick={ handledeletetrue}
                           autoFocus
                         >
                           Agree
@@ -149,6 +158,9 @@ export default function BasicTable() {
             </TableBody>
           </Table>
         </TableContainer>
+      )}
+      {productsInCart.length >= 2 && (
+        <center><Button  style={{marginTop:15,border:"1px",borderColor:"blue",borderWidth:1}} onClick={handledelteall}>RemoveAll</Button></center>
       )}
     </>
   );
