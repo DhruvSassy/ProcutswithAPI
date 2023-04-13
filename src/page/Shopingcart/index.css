@@ -1,0 +1,14 @@
+.empty-text{
+    display: block;
+	padding: 2rem;
+	margin: auto;
+	margin-top: 235px;
+	text-align: center;
+	border: 1px solid red;
+	font-size: 2rem;
+	font-weight: bold;
+	color: red;
+	background-color: whitesmoke;
+    width:50%;
+    
+}

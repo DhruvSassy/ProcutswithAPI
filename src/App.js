@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProductList from "./page/product";
+
+import "./App.css";
+import Header from "./components/Header/";
+import ProductDetail from "./page/product/productDetail";
+import axiosUtil from "./config/axios";
+import Error from "./page/Error/Error";
+import Shopingcart from "./page/Shopingcart";
+
+axiosUtil.initalise();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/"  exact Component={ProductList} />
+          <Route path="/:product" Component={ProductList} />
+          <Route path="/:product/:productId" exact Component={ProductDetail} />
+          <Route path="/cart" exact Component={Shopingcart} />
+          <Route path="*"  Component={Error} />
+        </Routes>
+      </Router>
   );
 }
 
