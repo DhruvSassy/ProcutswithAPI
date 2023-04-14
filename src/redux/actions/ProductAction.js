@@ -103,8 +103,16 @@ export const storeCart = (data) => {
             type: ActionTypes.CART_PRODUCT,
             payload: data,
           });
-         
         }
+}
+
+export const clearCart = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: ActionTypes.CART_PRODUCT,
+      payload: [],
+    });
+  }
 }
 
 

@@ -16,8 +16,9 @@ import {
 } from "@mui/material";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
+import { clearCart, storeCart } from "../../redux/actions/ProductAction";
+
 import "./index.css";
-import { storeCart } from "../../redux/actions/ProductAction";
 
 export default function BasicTable() {
   const { cart } = useSelector((state) => state.allProducts);
@@ -49,11 +50,10 @@ export default function BasicTable() {
   };
 
   const handledelteall = () => {
-    productsInCart.length = 0;
-    return cart;
+    dispatch(clearCart()); 
+    window.location.reload("/cart",false)
     
   };
-
   return (
     <>
       {productsInCart?.length === 0 ? (

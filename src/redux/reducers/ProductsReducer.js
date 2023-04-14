@@ -19,6 +19,8 @@ export const productRdeucers = (state = initialState, { type, payload }) => {
       return { ...state, category: payload };
     case ActionTypes.CART_PRODUCT:
       return{...state, cart: payload};
+    case ActionTypes.CLEAR_CART:
+      return{...state,cart:[]}
     default:
       return state;
   }
