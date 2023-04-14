@@ -6,7 +6,7 @@ import "./App.css";
 import Header from "./components/Header/";
 import ProductDetail from "./page/product/productDetail";
 import axiosUtil from "./config/axios";
-import Error from "./page/Error/Error";
+import Error from "./page/Error/";
 import Shopingcart from "./page/Shopingcart";
 
 axiosUtil.initalise();

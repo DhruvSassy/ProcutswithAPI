@@ -57,12 +57,13 @@ const CardDetails = (props) => {
               color: "black",
               backgroundColor: "orange",
               borderColor: "green",
+              marginRight:3
             }}
             onClick={homeHandler}
           >
             Back
           </Button>
-          &nbsp;&nbsp;&nbsp;&nbsp;
+        
           <Button
             size="large"
             variant="outlined"

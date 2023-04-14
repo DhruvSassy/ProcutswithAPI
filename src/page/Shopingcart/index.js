@@ -13,6 +13,11 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  Box,
 } from "@mui/material";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -24,25 +29,26 @@ export default function BasicTable() {
   const { cart } = useSelector((state) => state.allProducts);
   const [productsInCart, setProducts] = useState(cart);
   const [open, setOpen] = useState(false);
-  const [seletedpro,setSelectedPro] = useState();
+  const [seletedpro, setSelectedPro] = useState();
   const dispatch = useDispatch();
+  const initialValue = 0;
+const total = cart.reduce((accumulator,current) => accumulator + current.price * current.count, initialValue)
 
   const onQuantityChange = (i, count) => {
-    productsInCart[i].count = count
-  setProducts([...productsInCart]);
-    
+    productsInCart[i].count = count;
+    setProducts([...productsInCart]);
   };
 
   const handleClickOpen = (id) => {
-    setSelectedPro(id)
+    setSelectedPro(id);
     setOpen(true);
   };
 
   const handledeletetrue = () => {
-    const test = productsInCart.filter((rec)=> rec.id !== seletedpro)
+    const test = productsInCart.filter((rec) => rec.id !== seletedpro);
     setProducts([...test]);
     setOpen(false);
-    dispatch(storeCart(test))
+    dispatch(storeCart(test));
   };
 
   const handleClose = () => {
@@ -50,10 +56,26 @@ export default function BasicTable() {
   };
 
   const handledelteall = () => {
-    dispatch(clearCart()); 
-    window.location.reload("/cart",false)
-    
+    dispatch(clearCart());
+    window.location.reload("/cart", false);
   };
+
+  const card = (
+    <React.Fragment>
+      <CardContent style={{backgroundColor:"lightblue",textAlign:"center",padding:1}}>
+        <Typography variant="body2" >
+         <h1 style={{fontSize:"2rem",padding:0}}>Total</h1>
+        </Typography>
+      </CardContent>
+      <Typography  >
+          <h2 style={{marginLeft:30,marginTop:30,fontSize:"1rem"}} >Grand Total:{ total || initialValue}</h2>
+        </Typography>
+      <CardActions>
+        <Button size="small" variant="contained" style={{width:'100%'}}>CheckOut</Button>
+      </CardActions>
+    </React.Fragment>
+  );
+  
   return (
     <>
       {productsInCart?.length === 0 ? (
@@ -88,7 +110,7 @@ export default function BasicTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productsInCart?.map((product,i) => (
+              {productsInCart?.map((product, i) => (
                 <TableRow
                   key={product.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -105,27 +127,26 @@ export default function BasicTable() {
                   </TableCell>
 
                   <TableCell align="left">{product.description}</TableCell>
+                
+                  {product.stock < product.count ? <p align="left" style={{marginTop:36,marginLeft:25}}>{product.price}$</p>:
                   <TableCell align="left">
                     {product.price * product.count || product.price * 1}$
                   </TableCell>
+                   }  
+                 
                   <TableCell align="left">
-                    <select
-                      className="count"
+                  {product.stock < product.count ? <p style={{color:"red",marginTop:22,}}>Out of Stock</p> :
+                    <input
+                      className="countinput"
                       value={product.count}
+                      defaultValue={1}
                       onChange={(event) => {
                         onQuantityChange(i, event.target.value);
-                      }}
-                    >
-                      {[...Array(10).keys()]?.map((number) => {
-                        const num = number + 1;
-                        return (
-                          <option  value={num} key={num} defaultValue="1">
-                            {num}
-                          </option>
-                        );
-                      })}
-                    </select>
+                      }} 
+                    />
+                  }               
                   </TableCell>
+                 
                   <TableCell align="left">
                     <button
                       className="btn remove-btn"
@@ -139,14 +160,20 @@ export default function BasicTable() {
                       aria-labelledby="alert-dialog-title"
                       aria-describedby="alert-dialog-description"
                     >
-                      <DialogTitle id="alert-dialog-title">
+                      <DialogTitle
+                        id="alert-dialog-title"
+                        style={{ backgroundColor: "lightblue" }}
+                      >
                         {"Are you sure you want to delete this product?"}
                       </DialogTitle>
-                      <DialogActions>
-                        <Button onClick={handleClose}>Disagree</Button>
+                      <DialogActions style={{ backgroundColor: "lightblue" }}>
+                        <Button onClick={handleClose} style={{ color: "red" }}>
+                          Disagree
+                        </Button>
                         <Button
-                          onClick={ handledeletetrue}
+                          onClick={handledeletetrue}
                           autoFocus
+                          style={{ color: "darkgreen" }}
                         >
                           Agree
                         </Button>
@@ -160,8 +187,24 @@ export default function BasicTable() {
         </TableContainer>
       )}
       {productsInCart.length >= 2 && (
-        <center><Button  style={{marginTop:15,border:"1px",borderColor:"blue",borderWidth:1}} onClick={handledelteall}>RemoveAll</Button></center>
+        <center>
+          <button
+            style={{
+              marginTop: 15,
+              padding:5,
+              borderWidth:1,
+            }}
+            onClick={handledelteall}
+          >
+            RemoveAll
+          </button>
+        </center>
       )}
+      {productsInCart.length >= 1 && (
+      <Box style={{ width:"300px",float: "right",marginTop:40 }}>
+      <Card variant="outlined">{card}</Card>
+    </Box>
+    )}
     </>
   );
-}
+};
