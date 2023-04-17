@@ -24,15 +24,19 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { clearCart, storeCart } from "../../redux/actions/ProductAction";
 
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 
 export default function BasicTable() {
-  const { cart } = useSelector((state) => state.allProducts);
+  const { products,cart } = useSelector((state) => state.allProducts);
   const [productsInCart, setProducts] = useState(cart);
   const [open, setOpen] = useState(false);
   const [seletedpro, setSelectedPro] = useState();
   const dispatch = useDispatch();
-  const initialValue = 0;
-const total = cart.reduce((accumulator,current) => accumulator + current.price * current.count, initialValue)
+  const navigate = useNavigate();
+  const totalAmount = cart.reduce(
+    (total, current) => total + current.price * current.count || total + current.price,
+    0
+  );
 
   const onQuantityChange = (i, count) => {
     productsInCart[i].count = count;
@@ -60,22 +64,85 @@ const total = cart.reduce((accumulator,current) => accumulator + current.price *
     window.location.reload("/cart", false);
   };
 
+  
+    const loadScript = (src) => {
+      return new Promise((resovle) => {
+        const script = document.createElement("script");
+        script.src = src;
+  
+        script.onload = () => {
+          resovle(true);
+        };
+  
+        script.onerror = () => {
+          resovle(false);
+        };
+  
+        document.body.appendChild(script);
+      });
+    };
+    const handleOrder = async () => {
+      const res = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+  
+      if (!res) {
+        alert("You are offline... Failed to load Razorpay SDK");
+        return;
+      }
+  
+      const options = {
+        key: "rzp_test_4H7PP2p2WT2qfc",
+        currency: "USD",
+        amount:totalAmount * 100,
+        name: "Dhruv Gheewala",
+        description: "Thanks for purchasing",
+      
+        handler: function (response) {
+          alert(response.razorpay_payment_id);
+          alert("Payment Successfully");
+        },
+        prefill: {
+          name: "code with akky",
+        },
+      };
+      console.log(totalAmount)
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    
+    };
+  
+
   const card = (
     <React.Fragment>
-      <CardContent style={{backgroundColor:"lightblue",textAlign:"center",padding:1}}>
-        <Typography variant="body2" >
-         <h1 style={{fontSize:"2rem",padding:0}}>Total</h1>
+      <CardContent
+        style={{
+          backgroundColor: "lightblue",
+          textAlign: "center",
+          padding: 1,
+        }}
+      >
+        <Typography variant="body2">
+          <h1 style={{ fontSize: "2rem", padding: 0 }}>Total</h1>
         </Typography>
       </CardContent>
-      <Typography  >
-          <h2 style={{marginLeft:30,marginTop:30,fontSize:"1rem"}} >Grand Total:{ total || initialValue}</h2>
-        </Typography>
+      <Typography>
+        
+       {products.stock < products.count ? <p style={{margin:10,color:"red"}}>Please make cart proper</p> :
+        <h2 style={{ marginLeft: 30, marginTop: 30, fontSize: "1rem" }}>
+          Grand Total:{`${totalAmount}$ `|| 0}
+        </h2>
+      }
+      </Typography>
+      
       <CardActions>
-        <Button size="small" variant="contained" style={{width:'100%'}}>CheckOut</Button>
+        <Button size="small" variant="contained" onClick={handleOrder} style={{ width: "100%" }}>
+          CheckOut
+        </Button>
       </CardActions>
     </React.Fragment>
   );
-  
+
   return (
     <>
       {productsInCart?.length === 0 ? (
@@ -111,6 +178,7 @@ const total = cart.reduce((accumulator,current) => accumulator + current.price *
             </TableHead>
             <TableBody>
               {productsInCart?.map((product, i) => (
+                
                 <TableRow
                   key={product.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -127,26 +195,36 @@ const total = cart.reduce((accumulator,current) => accumulator + current.price *
                   </TableCell>
 
                   <TableCell align="left">{product.description}</TableCell>
-                
-                  {product.stock < product.count ? <p align="left" style={{marginTop:36,marginLeft:25}}>{product.price}$</p>:
+
+                  {product.stock < product.count ? (
+                    <p align="left" style={{ marginTop: 36, marginLeft: 25 }}>
+                      {product.price}$
+                    </p>
+                  ) : (
+                    <TableCell align="left">
+                      {product.price * product.count || product.price * 1}$
+                    </TableCell>
+                  )}
+
                   <TableCell align="left">
-                    {product.price * product.count || product.price * 1}$
-                  </TableCell>
-                   }  
-                 
-                  <TableCell align="left">
-                  {product.stock < product.count ? <p style={{color:"red",marginTop:22,}}>Out of Stock</p> :
                     <input
+                    type="number"
                       className="countinput"
                       value={product.count}
                       defaultValue={1}
                       onChange={(event) => {
                         onQuantityChange(i, event.target.value);
-                      }} 
+                      }}
                     />
-                  }               
+                    {product.stock < product.count ? (
+                      <p style={{ color: "red", marginTop: 22 }}>
+                        Out of Stock
+                      </p>
+                    ) : (
+                      ""
+                    )}
                   </TableCell>
-                 
+
                   <TableCell align="left">
                     <button
                       className="btn remove-btn"
@@ -191,8 +269,8 @@ const total = cart.reduce((accumulator,current) => accumulator + current.price *
           <button
             style={{
               marginTop: 15,
-              padding:5,
-              borderWidth:1,
+              padding: 5,
+              borderWidth: 1,
             }}
             onClick={handledelteall}
           >
@@ -200,11 +278,11 @@ const total = cart.reduce((accumulator,current) => accumulator + current.price *
           </button>
         </center>
       )}
-      {productsInCart.length >= 1 && (
-      <Box style={{ width:"300px",float: "right",marginTop:40 }}>
-      <Card variant="outlined">{card}</Card>
-    </Box>
-    )}
+      {productsInCart.length >= 1 &&  (
+        <Box style={{ width: "300px", float: "right", marginTop: 40 }}>
+          <Card variant="outlined">{card}</Card>
+        </Box>
+      )}
     </>
   );
-};
+}

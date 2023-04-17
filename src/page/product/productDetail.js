@@ -32,7 +32,6 @@ const ProductDetail = () => {
 
   const addProductToCart = () => {
     const isexist =cart.filter((rec) => rec.id === products.id)
-    console.log(isexist)
     if (isexist.length) {
       setOpen(true)
     } else {      

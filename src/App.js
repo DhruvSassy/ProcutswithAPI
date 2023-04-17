@@ -8,6 +8,7 @@ import ProductDetail from "./page/product/productDetail";
 import axiosUtil from "./config/axios";
 import Error from "./page/Error/";
 import Shopingcart from "./page/Shopingcart";
+import UserForm from "./page/UserDeatails";
 
 axiosUtil.initalise();
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/:product" Component={ProductList} />
           <Route path="/:product/:productId" exact Component={ProductDetail} />
           <Route path="/cart" exact Component={Shopingcart} />
+          <Route path="/address" exact Component={UserForm} />
           <Route path="*"  Component={Error} />
         </Routes>
       </Router>

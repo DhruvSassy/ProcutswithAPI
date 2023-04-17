@@ -18,5 +18,15 @@
     padding: 5px 10px;
     outline: none;
     width: 3rem;
+	
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
