@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ActionTypes } from "../constants/action-types";
 
+//Show Product API
 export const setProduct = () => {
   return (dispatch) => {
     return axios
@@ -20,8 +21,8 @@ export const setProduct = () => {
   };
 };
 
+//Show selected Product API
 export const selectedProduct = (productID) => {
-  
   return (dispatch) => {
     return axios
       .get(`/products/${productID}`)
@@ -40,6 +41,7 @@ export const selectedProduct = (productID) => {
   };
 };
 
+//Search Product API
 export const searchProduct = (title) => {
   return (dispatch) => {
     return axios
@@ -59,6 +61,7 @@ export const searchProduct = (title) => {
   };
 };
 
+//Show category name in catgory list API
 export const categoryProduct = () => {
   return (dispatch) => {
     return axios
@@ -78,6 +81,7 @@ export const categoryProduct = () => {
   };
 };
 
+//Show Category wise product API
 export const categorydetailProduct = (value) => {
   return (dispatch) => {
     return axios
@@ -97,6 +101,7 @@ export const categorydetailProduct = (value) => {
   };
 };
 
+//Store in cart
 export const storeCart = (data) => {
   return (dispatch) => {
           dispatch({
@@ -106,6 +111,7 @@ export const storeCart = (data) => {
         }
 }
 
+//Delete all products
 export const clearCart = (data) => {
   return (dispatch) => {
     dispatch({
