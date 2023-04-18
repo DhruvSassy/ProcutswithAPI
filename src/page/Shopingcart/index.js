@@ -27,7 +27,8 @@ import "./index.css";
 import { useNavigate } from "react-router-dom";
 
 export default function BasicTable() {
-  const { cart } = useSelector((state) => state.allProducts);
+  const { cart,products } = useSelector((state) => state.allProducts);
+  const { id, category } = products
   const [productsInCart, setProducts] = useState(cart);
   const [open, setOpen] = useState(false);
   const [seletedpro, setSelectedPro] = useState();
@@ -88,7 +89,7 @@ export default function BasicTable() {
       document.body.appendChild(script);
     });
   };
-  
+
   const handleOrder = async () => {
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
@@ -102,7 +103,7 @@ export default function BasicTable() {
     const options = {
       key: "rzp_test_4H7PP2p2WT2qfc",
       currency: "USD",
-      amount: totalAmount * 100,
+      amount: totalAmount * 1,
       name: "Urban Company",
       description: "Thanks for purchasing",
       timeout: 200,
@@ -113,6 +114,11 @@ export default function BasicTable() {
     };
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
+  };
+
+  //Navigate to prduct detail page
+  const handleDeatail = () => {
+    navigate(`/${category}/${id}`);
   };
 
   //Grand Total
@@ -173,14 +179,14 @@ export default function BasicTable() {
           >
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <h3>Image</h3>
+                <TableCell onClick={handleDeatail}>
+                  <h3 >Image</h3>
                 </TableCell>
                 <TableCell>
-                  <h3>Name</h3>
+                  <h3 onClick={handleDeatail}>Name</h3>
                 </TableCell>
                 <TableCell align="left">
-                  <h3>Description</h3>
+                  <h3 onClick={handleDeatail}>Description</h3>
                 </TableCell>
                 <TableCell align="left">
                   <h3>Price&nbsp;</h3>
