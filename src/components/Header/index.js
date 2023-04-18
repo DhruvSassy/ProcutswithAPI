@@ -25,22 +25,27 @@ const Header = () => {
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
+  //Open category list menu
   const handleClickevent = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  //Close category list menu
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  //Call Category product list API
   useEffect(() => {
     dispatch(categoryProduct())
   }, [dispatch]);
 
+  //Navigate to category proudct
   const handleCategory = (value) => {
    navigate(`/${value}`)
   };
 
+  //Category list selected item and close menu
   const handleListKeyDown = (event) => {
     if (event.key === "Tab") {
       setAnchorEl(null);
@@ -50,22 +55,25 @@ const Header = () => {
     } 
   };
 
+  //Navigate to home page
   const handleHome = () => {
       navigate("/");
   }
 
+  //Navigate to Cart Page
   const cartHandler = () => {
    navigate('/cart');
   }
 
+  //Style of category menu
   const myComponent = {
     width: '200px',
     height: '550px',
     overflowY: 'scroll',
     overflowX: 'hidden'
 }
-  return (
 
+  return (
       <AppBar>
         <Toolbar variant="dense">
           <IconButton

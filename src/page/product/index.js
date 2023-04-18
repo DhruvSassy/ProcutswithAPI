@@ -18,12 +18,13 @@ const ProductList = () => {
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 
+  //Call Search API
   const handleChange = (value) => {
     setInput(value);
-
     dispatch(searchProduct(value));
   };
 
+  //Call product detail API and Change page 
   useEffect(() => {
     if (location.pathname === "/") {
       dispatch(setProduct());

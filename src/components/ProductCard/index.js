@@ -9,9 +9,11 @@ const ProductComponent = ({ products, navigate }) => {
   const renderList = products?.map((products, i) => {
     const { id, title, images, price, category } = products;
 
+    //Navigate to Product detail page
     const detailHandler = () => {
       navigate(`/${category}/${id}`);
     };
+    
     return (
       <>
         <Container key={i} onClick={detailHandler}>

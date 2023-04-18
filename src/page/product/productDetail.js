@@ -22,14 +22,17 @@ const ProductDetail = () => {
 
   const { productId } = useParams();
 
+  //Call Single Product API
   useEffect(() => {
     dispatch(selectedProduct(productId));
   }, [dispatch, productId]);
 
+  //Navigate to Home Page
   const homeHandler = () => {
     navigate("/");
   };
 
+  //Add to Cart Product
   const addProductToCart = () => {
     const isexist =cart.filter((rec) => rec.id === products.id)
     if (isexist.length) {
@@ -40,11 +43,11 @@ const ProductDetail = () => {
     } 
   };
 
+  //Alert Box close 
   const handleClose = ( reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
   

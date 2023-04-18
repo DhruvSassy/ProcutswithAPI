@@ -8,6 +8,8 @@ const ImageZoom = ({products  }) => {
   const { images } = products;
   const [image, setImg] = useState(images?.[0] ?? "");
   const refs = useRef([]);
+
+  //Select img and activate img
   const hoverHandler = (images1, i) => {
     setImg(images1);
     refs.current[i]?.classList?.add("active");
@@ -17,12 +19,16 @@ const ImageZoom = ({products  }) => {
       }
     }
   };
+  
+  //Select img and display img
   refs.current = [];
   const addRefs = (el) => {
     if (el && !refs.current.includes(el)) {
       refs.current.push(el);
     }
   };
+
+  //Style of side img list
   const myComponent = {
     width: "115px",
     height: "350px",

@@ -34,14 +34,13 @@ export default function BasicTable() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-    const totalAmount = cart.reduce(
-      (total, current) =>
-        total + current.price * current.count || total + current.price,
-      0
-    );
+  const totalAmount = cart.reduce(
+    (total, current) =>
+      total + current.price * current.count || total + current.price,
+    0
+  );
 
-   
-    //Count Qty
+  //Count Qty
   const onQuantityChange = (i, count) => {
     productsInCart[i].count = count;
     setProducts([...productsInCart]);
@@ -89,6 +88,7 @@ export default function BasicTable() {
       document.body.appendChild(script);
     });
   };
+  
   const handleOrder = async () => {
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
@@ -130,19 +130,23 @@ export default function BasicTable() {
         </Typography>
       </CardContent>
       <Typography>
-      {productsInCart.filter((product) => product.stock < product.count || product.count <= 0).length > 0 ? (
-          <p style={{ margin: 10, color: "red" }}>Please make cart proper</p>):
-        
-          <h2 style={{ marginLeft: 30, marginTop: 30, fontSize: "1rem" }} >
+        {productsInCart.filter(
+          (product) => product.stock < product.count || product.count <= 0
+        ).length > 0 ? (
+          <p style={{ margin: 10, color: "red" }}>Please make cart proper</p>
+        ) : (
+          <h2 style={{ marginLeft: 30, marginTop: 30, fontSize: "1rem" }}>
             Grand Total:{`${totalAmount}$ ` || 0}
           </h2>
-}
+        )}
       </Typography>
 
       <CardActions>
-        {productsInCart.filter((product) => product.stock < product.count || product.count <= 0).length > 0 ? 
-          <p style={{ margin: 10, color: "red" }}></p>:
-      
+        {productsInCart.filter(
+          (product) => product.stock < product.count || product.count <= 0
+        ).length > 0 ? (
+          <p style={{ margin: 10, color: "red" }}></p>
+        ) : (
           <Button
             variant="contained"
             onClick={handleOrder}
@@ -150,7 +154,7 @@ export default function BasicTable() {
           >
             CheckOut
           </Button>
-         }
+        )}
       </CardActions>
     </React.Fragment>
   );
@@ -219,7 +223,6 @@ export default function BasicTable() {
                   )}
 
                   <TableCell align="left">
-                    
                     <input
                       type="number"
                       className="countinput"
@@ -292,7 +295,7 @@ export default function BasicTable() {
           </button>
         </center>
       )}
-      {productsInCart.length >= 1 &&  (
+      {productsInCart.length >= 1 && (
         <Box style={{ width: "300px", float: "right", marginTop: 40 }}>
           <Card variant="outlined">{card}</Card>
         </Box>
