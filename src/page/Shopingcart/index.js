@@ -179,14 +179,14 @@ import { useNavigate } from "react-router-dom";
           >
             <TableHead>
               <TableRow>
-                <TableCell onClick={handleDeatail}>
+                <TableCell>
                   <h3 >Image</h3>
                 </TableCell>
                 <TableCell>
-                  <h3 onClick={handleDeatail}>Name</h3>
+                  <h3>Name</h3>
                 </TableCell>
                 <TableCell align="left">
-                  <h3 onClick={handleDeatail}>Description</h3>
+                  <h3>Description</h3>
                 </TableCell>
                 <TableCell align="left">
                   <h3>Price&nbsp;</h3>
@@ -204,7 +204,7 @@ import { useNavigate } from "react-router-dom";
             </TableHead>
             <TableBody>
               {productsInCart?.map((product, i) => {
-                const isOutOfStock = product.stock < product.count
+                const isOutOfStock = product.stock < product.count || product.count < 0
                 return(
                 <TableRow
                   key={product.name}
@@ -214,14 +214,15 @@ import { useNavigate } from "react-router-dom";
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      style={{ width: 100 }}
+                      style={{ width: 100,cursor:'pointer' }}
+                      onClick={handleDeatail}
                     />
                   </TableCell>
-                  <TableCell component="th" scope="product">
+                  <TableCell component="th" scope="product" style={{cursor:'pointer'}} onClick={handleDeatail}>
                     {product.title}
                   </TableCell>
 
-                  <TableCell align="left">{product.description}</TableCell>
+                  <TableCell align="left"  onClick={handleDeatail} style={{cursor:'pointer'}}>{product.description}</TableCell>
                   <TableCell align="left">{product.price}$</TableCell>
                   {isOutOfStock ? (
                     <p align="left" style={{ marginTop: 36, marginLeft: 25 }}>
