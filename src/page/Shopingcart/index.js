@@ -26,7 +26,7 @@ import { clearCart, storeCart } from "../../redux/actions/ProductAction";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 
-export default function BasicTable() {
+ const BasicTable = () => {
   const { cart,products } = useSelector((state) => state.allProducts);
   const { id, category } = products
   const [productsInCart, setProducts] = useState(cart);
@@ -142,7 +142,7 @@ export default function BasicTable() {
           <p style={{ margin: 10, color: "red" }}>Please make cart proper</p>
         ) : (
           <h2 style={{ marginLeft: 30, marginTop: 30, fontSize: "1rem" }}>
-            Grand Total:{`${totalAmount}$ ` || 0}
+            Grand Total: {`${totalAmount}$ ` || 0}
           </h2>
         )}
       </Typography>
@@ -192,6 +192,9 @@ export default function BasicTable() {
                   <h3>Price&nbsp;</h3>
                 </TableCell>
                 <TableCell align="left">
+                  <h3>Total&nbsp;</h3>
+                </TableCell>
+                <TableCell align="left">
                   <h3>Qty&nbsp;</h3>
                 </TableCell>
                 <TableCell align="left">
@@ -200,7 +203,9 @@ export default function BasicTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productsInCart?.map((product, i) => (
+              {productsInCart?.map((product, i) => {
+                const isOutOfStock = product.stock < product.count
+                return(
                 <TableRow
                   key={product.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -217,8 +222,8 @@ export default function BasicTable() {
                   </TableCell>
 
                   <TableCell align="left">{product.description}</TableCell>
-
-                  {product.stock < product.count ? (
+                  <TableCell align="left">{product.price}$</TableCell>
+                  {isOutOfStock ? (
                     <p align="left" style={{ marginTop: 36, marginLeft: 25 }}>
                       {product.price}$
                     </p>
@@ -234,12 +239,12 @@ export default function BasicTable() {
                       className="countinput"
                       value={product.count}
                       defaultValue={1}
-                      min="0"
+                      min={0}
                       onChange={(event) => {
                         onQuantityChange(i, event.target.value);
                       }}
                     />
-                    {product.stock < product.count || product.count <= 0 ? (
+                    {isOutOfStock ? (
                       <p style={{ color: "red", marginTop: 22 }}>
                         Out of Stock
                       </p>
@@ -282,7 +287,7 @@ export default function BasicTable() {
                     </Dialog>
                   </TableCell>
                 </TableRow>
-              ))}
+              )})}
             </TableBody>
           </Table>
         </TableContainer>
@@ -302,10 +307,12 @@ export default function BasicTable() {
         </center>
       )}
       {productsInCart.length >= 1 && (
-        <Box style={{ width: "300px", float: "right", marginTop: 40 }}>
+        <Box style={{ width: "300px", float: "right", marginTop: 40,marginBottom: 30 }}>
           <Card variant="outlined">{card}</Card>
         </Box>
       )}
     </>
   );
-}
+};
+
+export default BasicTable;
